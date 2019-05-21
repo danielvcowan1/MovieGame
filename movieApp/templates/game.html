@@ -1,0 +1,493 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<style>
+div.scrollmenu {
+  background-color: white;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.btn-custom {
+    padding: 20px 30px;
+    font-size: 70px; 
+    line-height: normal;
+    background-color: #c4302b; 
+}
+
+div.scrollmenu a {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+  background-color: #777;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  position: fixed; 
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.time { grid-area: left; position:absolute; }
+.start { grid-area: header1; position: static; }
+.startResult {grid-area: header2; }
+.end { grid-area: header3;  }
+.endResult {grid-area: header4;  }
+.instructions{grid-area: main; position: absolute; }
+.hint { grid-area: menu;  }
+.theSubmission{ grid-area: right;  }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'left left header1 header2 header3 header4'
+    'menu menu menu main main main '
+    'menu menu menu right right right';
+  grid-gap: 1px;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.grid-container > div {
+  background-color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  font-size: 30px;
+  grid-template-columns: 1fr 300px;
+}
+
+</style>
+
+<div class="loader" id="loadingScreen"></div>
+
+<div id="GameBoard">
+    <div class="jumbo-tron text-centered">
+    
+        <div class="grid-container" id="myGrid"> 
+            <div class="time">
+                <h1 id="timer" style="color: red;"></h1>
+            </div>
+            <div class="startResult">
+                 <h1 id=startActor style="color: #3399ff; font-size: 20px;"></h1>
+            </div>  
+            <div class="start">
+                <h1 style="font-size: 20px;" id="header2">Starting Actor:</h1> 
+            </div>
+            <div class="end">
+             <h1 style="font-size: 20px;" id="header1">Goal Actor: </h1>
+            </div>
+            <div class="endResult">
+                <h1 id=goalActor style="color: #3399ff; font-size: 20px;"></h1>
+            </div>
+            <div class="theSubmission">
+                
+    <form action="#" class="form-inline my-2 my-lg-0" method="POST" id="myForm">
+     
+      <input class="form-control mr-sm-2" type="text" id="movie_name" placeholder="Enter a Movie" aria-label="Search" >
+      <input class="form-control mr-sm-2" type="text" id="actor_name" placeholder="Enter an Actor" aria-label="Search" >
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Submit</button>
+         </form>
+   
+
+            </div>
+
+
+           
+
+            </div>
+            </div>
+        
+      
+        <h1 id="winLose" style="color: green; text-align: center;"></h1>
+       
+        
+            <div class="alert alert-info" id="correctMatch"  >
+            <strong>To start,</strong> Please enter a movie the starting actor was in, and another actor in that movie.
+            </div>
+        
+    <br>
+    
+
+     <div class="scrollmenu">
+             <img id="startPoster" src="" />
+             <img id="moviePoster1" src="" />
+             <img id="actorPoster2" src="" />
+             <img id="moviePoster2" src="" />
+             <img id="actorPoster3" src="" />
+             <img id="moviePoster3" src="" />
+             <img id="actorPoster4" src=""/>
+        </div>
+<br>
+<br>
+
+</div>
+    
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"> </script>
+    <script >
+
+            //declaring variables needed for HTTP Requests
+            var starter=""; 
+            var finishingActor=""; 
+            var searchHTTPactor= "https://api.themoviedb.org/3/search/person?api_key=INSERT&language=en-US&query=name&page=1&include_adult=false"
+            var searchHTTPmovie= "https://api.themoviedb.org/3/search/movie?api_key=INSERT&language=en-US&query=name&page=1&include_adult=false"
+            var searchHTTPposter= "http://image.tmdb.org/t/p/w185/"
+            var getHTTPmovieCast="https://api.themoviedb.org/3/movie/name/credits?api_key=INSERT"
+            var getHTTPactorCredits="https://api.themoviedb.org/3/person/actorID/movie_credits?api_key=INSERT&language=en-US"
+        
+            var myResult=""; 
+            var editedAPIRequest=""; 
+
+            //declaring variables needed for the Game 
+            var guessingIteration=0; 
+            var prevActor="";
+            var wincondition=false; 
+            
+
+               //GAME GENERATION ON LAUNCH
+                $(document).ready(function(){
+
+                    $("#GameBoard").hide(); 
+
+                    var startList=({{actorList | safe}}); 
+                    var rand=Math.floor(Math.random()*Object.keys(startList).length-1); 
+                    var test=Object.keys(startList)[rand]; 
+                    console.log(test);
+                    startingActor=test; 
+                    prevActor=test; 
+                    test=escape(test);
+                    editedAPIRequest=searchHTTPactor.replace("name", test); 
+                    
+                    //delete
+                    $.ajax({
+                         url: "test1", 
+                         contentType: "application/json",
+                         dataType: "json",
+                         type: "post", 
+                         data: JSON.stringify({"apiRequest":editedAPIRequest}),
+                         success: function(result){
+                              
+                             var posterSource=searchHTTPposter.concat(result["results"][0]["profile_path"]);
+                             //$("#startPoster").attr("src",posterSource);
+
+                             var startID=result["results"][0]["id"]; 
+                             var movie1=result["results"][0]["known_for"][0]["id"]; 
+                             console.log(result["results"][0]["known_for"][0]["title"]); 
+                             editedAPIRequest=getHTTPmovieCast.replace("name", movie1); 
+                             console.log(editedAPIRequest); 
+                             
+                             $.ajax({
+                                 url: "test1", 
+                                 contentType: "application/json",
+                                 dataType: "json",
+                                 type: "post", 
+                                 data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                 success: function(anotherResult){
+                                    myResult=anotherResult; 
+
+                                    var i=0; 
+                                    var currActor=""; 
+                                    while(true){
+                                        currActor=myResult["cast"][i]["name"]; 
+                                        if(startingActor!==currActor)
+                                             break; 
+                                         i++; 
+                                         }
+                                        console.log(currActor); 
+                                     var secondActor=myResult["cast"][i]["id"];  
+                                     editedAPIRequest=getHTTPactorCredits.replace("actorID", secondActor);
+
+                                    $.ajax({
+                                        url: "test1", 
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        type: "post",
+                                        data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                        success: function(thirdResult){
+                                            var count = Object.keys(thirdResult).length;
+                                            var randomNum=Math.floor(Math.random() * (count-1)); 
+                                            /*ERROR CHECKING
+                                            if(thirdResult)
+                                                console.log("the api request was successful"); 
+                                            else 
+                                                console.log("NULL"); 
+                                            */ 
+                                            var secondMovie=thirdResult["cast"][randomNum]["id"]; 
+                                            console.log(thirdResult["cast"][randomNum]["title"]);
+                                            editedAPIRequest=getHTTPmovieCast.replace("name", secondMovie); 
+
+                                     $.ajax({
+                                        url: "test1" , 
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        type: "post",
+                                        data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                        success: function(fourthResult){
+                                            
+                                            i=0; 
+                                            while(true){
+                                                currActor=fourthResult["cast"][i]["id"]; 
+                                                if(secondActor!==currActor && startID!==currActor)
+                                                     break; 
+                                             i++; 
+                                            }
+                                            var thirdActor=fourthResult["cast"][i]["id"]; 
+                                            console.log(fourthResult["cast"][i]["name"]); 
+                                            editedAPIRequest=getHTTPactorCredits.replace("actorID", currActor);
+
+                                            $.ajax({
+                                                url: "test1", 
+                                                contentType: "application/json",
+                                                dataType: "json",
+                                                type: "post",
+                                                data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                                success: function(fifthResult){
+                                                    count = Object.keys(fifthResult).length;
+                                                    randomNum=Math.floor(Math.random() * (count-1)); 
+                                                     var thirdMovie=fifthResult["cast"][randomNum]["id"]; 
+                                                     console.log(fifthResult["cast"][randomNum]["title"]); 
+                                            
+                                                    editedAPIRequest=getHTTPmovieCast.replace("name", thirdMovie); 
+
+                                                    $.ajax({
+                                                        url: "test1", 
+                                                        contentType: "application/json",
+                                                        dataType: "json",
+                                                        type: "post",
+                                                        data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                                        success: function(sixthResult){
+                                                            
+                                                             i=0; 
+                                                             while(true){
+                                                                currActor=sixthResult["cast"][i]["id"]; 
+                                                                if(thirdActor!==currActor && secondActor!==currActor && startID!==currActor)
+                                                                      break; 
+                                                                i++; 
+                                                             }
+                                                             console.log(sixthResult["cast"][i]["name"]); 
+                                                             finishingActor=sixthResult["cast"][i]["name"]; 
+                                                              $("#startActor").html(result["results"][0]["name"]+" ");
+                                                              $("#goalActor").html(sixthResult["cast"][i]["name"]+" "); //generate the START ACTOR 
+                                                              $("#startPoster").attr("src",posterSource);
+                                                              var posterPath=searchHTTPposter.concat(sixthResult["cast"][i]["profile_path"]);
+                                                              $("#actorPoster4").attr("src",posterPath);
+                                                            $("#loadingScreen").hide(); 
+                                                            $("#GameBoard").show(); 
+                                                            }
+                                                            }); 
+                                                        }
+                                                    });
+                                                }
+                                            });         
+                                                }
+                                            }); 
+                                    }}); 
+                                }
+                            }); 
+
+                     var now = new Date().getTime();
+                    var newDateObj = new Date(now + 3*60000);
+                    var countDownDate = newDateObj; 
+
+                    // Update the count down every 1 second
+                    var x = setInterval(function() {
+
+                    // Get todays date and time
+                    var now = new Date().getTime();
+                        
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
+                        
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                    // Output the result in an element with id="demo"
+                    var editedSecs=seconds; 
+                    if(seconds<10){
+                        editedSecs="0"+seconds.toString();
+                    }
+                    $("#timer").html(minutes + ":" + editedSecs);
+                        
+                    // If the count down is over, write some text 
+                    if (distance < 0) {
+                        clearInterval(x);
+                        if(wincondition==false)
+                            displayLosePage(); 
+                    }
+                    }, 1000);
+
+                            }); 
+
+         $("#myForm").submit(function(e){
+                     e.preventDefault();
+                     //var values = $(this).serializeArray();
+                    
+                     var movie=$("#movie_name").val();
+                     var actor=$("#actor_name").val();
+                     
+        //need one set up ajax enders 
+                    var normalized=escape(actor); 
+                    editedAPIRequest=searchHTTPactor.replace("name", normalized); 
+
+                    $.ajax({
+                            url: "test1", 
+                            contentType: "application/json",
+                            dataType: "json",
+                            type: "post",
+                             data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                            success: function(theResult){
+                               // console.log("actor successful"); 
+                                    if(theResult["results"].length>0){
+                                    console.log("the results greater than zero"); 
+                                    actor=theResult["results"][0]["name"]; 
+                                    var poster=searchHTTPposter.concat(theResult["results"][0]["profile_path"]); 
+                                movie=escape(movie);
+                                editedAPIRequest=searchHTTPmovie.replace("name", movie); 
+                                console.log(editedAPIRequest); 
+
+                        $.ajax({
+                            url: "test1", 
+                            contentType: "application/json",
+                            dataType: "json",
+                            type: "post",
+                            data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                            success: function(result){
+                                if(result["results"].length>0){
+                                console.log("got here"); 
+                                var movieId=result["results"][0]["id"]; 
+                                var movName=result["results"][0]["title"]; 
+                                var movPost=searchHTTPposter.concat(result["results"][0]["poster_path"]);
+                                editedAPIRequest=getHTTPmovieCast.replace("name", movieId); 
+
+                                $.ajax({
+                                    url: "test1", 
+                                    contentType: "application/json",
+                                    dataType: "json",
+                                    type: "post",
+                                    data: JSON.stringify({"apiRequest":editedAPIRequest,}),
+                                    success: function(result2){
+                                        console.log("starter is "+starter); 
+                                        console.log("actor is "+actor); 
+                                        var size=Object.keys(result2["cast"]).length;
+                                        console.log("size of queue is  "+size); 
+                                        var flag=0; 
+                                        for(var i=0; i<size; i++){
+                                            if(actor===result2["cast"][i]["name"] || prevActor===result2["cast"][i]["name"]){
+                                                console.log(result2["cast"][i]["name"]); 
+                                                flag+=1; 
+                                            }
+                                            if(flag===2)
+                                                break; 
+                                        }
+                                        console.log("flag value is "+flag); 
+                                        if(flag===2){
+                                            if(actor===finishingActor){
+                                                 $("#moviePoster3").hide().attr("src",movPost).fadeIn("slow"); 
+                                                 wincondition=true; 
+                                                  displayWinPage(); 
+                                            }
+                                            else {
+                                                prevActor=actor; //set the previous actor
+                                                
+
+                                                $("#correctMatch").attr("class", "alert alert-success");
+                                                $("#correctMatch").text("MATCH! Please enter another actor and movie.");
+                                                $("#movie_name").val("");
+                                                $("#actor_name").val("");
+
+                                                
+                                                if(guessingIteration===0){
+                                                     $("#moviePoster1").hide().attr("src",movPost).fadeIn("slow"); 
+                                                     $("#actorPoster2").hide().attr("src",poster).fadeIn("slow"); 
+                                                }
+                                                else if(guessingIteration===1){
+                                                    $("#moviePoster2").hide().attr("src",movPost).fadeIn("slow"); 
+                                                    $("#actorPoster3").hide().attr("src",poster).fadeIn("slow"); 
+                                                }
+                                                else if(guessingIteration===2){
+                                                    $("#moviePoster3").hide().attr("src",movPost).fadeIn("slow"); 
+                                                    displayLosePage(); 
+                                                }
+                                                guessingIteration+=1; //set the guessing iteration
+                                            }
+                                        }
+                                        else {
+                                                $("#correctMatch").attr("class", "alert alert-danger");
+                                                $("#correctMatch").text("NOT A MATCH. Please try again.");
+                                        }
+                                            
+                                    }
+                                     }); }
+                                        else{
+                                              $("#correctMatch").attr("class", "alert alert-danger");
+                                              $("#correctMatch").text("NOT A MATCH. Please try again.");
+                                        }
+                                     }
+                                     }); 
+                                }
+                                else {
+                                    console.log("went to this one"); 
+                                   $("#correctMatch").attr("class", "alert alert-danger");
+                                   $("#correctMatch").text("NOT A MATCH. Please try again."); 
+                                }
+
+                            }
+                    }); 
+                });
+
+            function displayLosePage(){
+                $("#myGrid").hide(); 
+                $("#correctMatch").hide();  
+                $("#winLose").html("Sorry you lose."); 
+                
+            }
+            function displayWinPage(){
+                $.ajax({
+                    url: "test2", 
+                    contentType: "application/json",
+                    dataType: "json",
+                    type: "post",
+                    success: function(result2){
+
+                    }
+                }); 
+
+                $("#myGrid").hide(); 
+                $("#correctMatch").hide(); 
+                $("#winLose").html("Congrats you win!"); 
+                
+            }
+               
+        </script> 
+
+
+{% endblock %}

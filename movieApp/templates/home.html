@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<style>
+.container {
+ width: 1000px;
+ overflow: hidden;
+ margin: 20px auto;
+ background: white;
+}
+
+.photobanner {
+ opacity: 0.7;
+ height: 370px;
+ width: 3550px;
+ margin-bottom: 80px;
+}
+
+.first {
+ -webkit-animation: bannermove 30s linear infinite;
+    -moz-animation: bannermove 30s linear infinite;
+     -ms-animation: bannermove 30s linear infinite;
+      -o-animation: bannermove 30s linear infinite;
+         animation: bannermove 30s linear infinite;
+}
+
+.middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 10px;
+  border-radius: 20px;
+}
+ 
+@keyframes "bannermove" {
+ 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -6695px;
+ }
+}
+ 
+@-moz-keyframes bannermove {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -6695px;
+ }
+}
+ 
+@-webkit-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -6695px;
+ }
+}
+ 
+@-ms-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -6695px;
+ }
+}
+ 
+@-o-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -6695px;
+ }
+}
+</style>
+
+<div id="container">
+    <div class="photobanner">
+    	<img height=450px class="first" src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/bMVujB1SaHhXD5gQdO4Xf47WXD3.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/7ksHQG9qbEyPBBTAe8NfJVAipmJ.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/altwR3skJ9L4082tHPIRtTVYDg3.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/36qWnokCU1VOdSyrmGbTxzGou44.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/5uTIEUSBVzmEZ8TnFEZbCCOVHPj.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/iUtun8jreKIbP4ukmpHswg3DYKj.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/gTq6MPt7SeMiJ2miHeMoNEZTz4p.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/avYdNkeg1oTvmrNJbFDcTlBCkKs.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/c5AyWNWooMGkJXlqLwmPQCjUwHt.jpg" alt="" />
+        <img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/a2NJbLwimILFYOVArpUuwS1pBAY.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/nZirljb8XYbKTWsRQTplDGhx39Q.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/5tVf0ow8MX4OwjmVoSa5v7qUDka.jpg" alt="" />
+        <img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/7y3eYvTsGjxPYDtSnumCLIMDkrV.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/5dI5s8Oq2Ook5PFzTWMW6DCXVjm.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/vgpXmVaVyUL7GGiDeiK1mKEKzcX.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/3vypmub75rLItlC51uJUurNYkW0.jpg" alt="" />
+        <img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/NUbCSwy2EQ9Z6psUjPqr3WdVI2.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/umikKeCX3vEZoUcx2klxPG8571s.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/b0nIj7dr2bcLAn3erYhql7f6aUm.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/f2uy1zq0qmtLBpsr6N9uQ8FktOr.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/qeHasONCKH5sR9HcTWquXI5ZN5y.jpg" alt="" />
+        <img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/bMVujB1SaHhXD5gQdO4Xf47WXD3.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/7ksHQG9qbEyPBBTAe8NfJVAipmJ.jpg" alt="" />
+    	<img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/altwR3skJ9L4082tHPIRtTVYDg3.jpg" alt="" />
+        <img height=450px src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg" alt="" />
+    </div>
+
+    <div class="middle" >
+        <h1><b><a style="color:black; font-size:50px; font-family:arial black" href="/game">PLAY</b></a></h1>
+    </div>
+</div>
+	
+{% endblock %}

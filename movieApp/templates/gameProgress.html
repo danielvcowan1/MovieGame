@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    
+    <div class="jumbo-tron text-centered">
+            <br>
+            <h1>Starting Actor:</h1> 
+            <p>{{startActor}}</p>
+            <h1>Goal Actor: </h1>
+            <p>{{goalActor}}</p>
+
+
+            <div class="box">
+                <style>
+                    .box {
+                     border: 1px solid black ;
+                    }
+                </style>
+            
+                <h3 style="color: green; font-size:20px; ">Current Path: </h3>
+                 <p>{{path}}</p>
+            </div>
+          
+
+            <h2 style="color:red">{{errorMsg}}</h2>
+            <h2 style="color: green">{{validMatch}}</h2>
+            
+            <form action="/gameProgress" class="form-inline my-2 my-lg-0" method="POST">
+                <input class="form-control mr-sm-2" type="text" name="movie_name" placeholder="Enter a Movie" aria-label="Search" >
+                <input class="form-control mr-sm-2" type="text" name="actor_name" placeholder="Enter an Actor" aria-label="Search" >
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Submit</button>
+                <input type="hidden" name="start-actor" value='{{startActor}}' >
+                <input type="hidden" name="actor2" value='{{secondActor}}'> 
+                <input type="hidden" name="actor3" value='{{thirdActor}}'>
+               <input type="hidden" name="goal-actor" value='{{goalActor}}' >
+               <input type="hidden" name="count"  value='{{counter}}' >
+               <input type="hidden" name="validPath" value='{{path}}' > 
+         </form>
+
+	</div>
+
+    
+
+{% endblock %}

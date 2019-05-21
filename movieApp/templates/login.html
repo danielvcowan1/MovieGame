@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <head>
+    <link rel="signindesign" type="text/css" href="signindesign.css">
+    </head>
+
+    <div class="jumbo-tron text-centered">
+    <br>
+	<h1>Login</h1>
+        <form action="/login_user">
+        Username:<br>
+        <input type="text" name="username"><br>
+        Password:<br>
+        <input type="password" name="password">
+	<p></p>
+	<p>
+        <button type="submit">Login</button>
+        </p>
+        </form>
+
+        <p>Don't have an account? <a href="/signup"> Make one here!</a></p>
+    </div>
+
+{% endblock %}

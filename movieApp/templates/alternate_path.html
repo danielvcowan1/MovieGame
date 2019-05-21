@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<div class="jumbo-tron text-centered">
+			<h1>Instructions</h1>
+			<p>Given a starting actor, name a movie this actor was in and a fellow cast member.
+                This counts as 1 <em>move.</em> Repeat this process until you've named the goal actor
+                as the fellow cast member. <em><b>Easy as that!</b></em> Count the number of movies in
+                your chain to get the number of <em>moves.</em> Test your movie trivia chops by trying 
+                to reach the goal in as few moves as possible! Let's see an example.</p>
+            <h5>Example</h5>
+            <p><b>Start: </b>Will Ferrell</p>
+            <p style="margin-top:-20px"><b>Goal: </b>Michael Keaton</p>
+	</div>
+
+    <div class="d-flex justify-content-around">
+        <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/sXT9uCw7ceIxTdmL9XqtuYdNmgM.jpg" />
+        <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/b4mYjC8kKx32BnCNBQeDCA76WBd.jpg" />
+        <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2/baeHNv3qrVsnApuKbZXiJOhqMnw.jpg" />
+    </div>
+    <div class="d-flex justify-content-around">
+        <p>Will Ferrell</p>
+        <p>--></p>
+        <p>The Other Guys</p>
+        <p>--></p>
+        <p>Michael Keaton</p>
+    </div>
+    <div>
+        <p><em><b>THIS CAN BE DONE IN JUST 1 MOVE!</b></em></p>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="jumbo-tron text-centered">
+            <br>
+			<h1>Sign Up</h1>
+
+            <form action="/create_user" id="signup-form">
+            Username:<br>
+            <input type="text" name="username"><br>
+            Password:<br>
+            <input type="password" name="password">
+            <p></p>
+	        <p>
+            <button type="submit">Sign up</button>
+            </p>
+            </form>
+
+            <p>Already have an account? <a href="/login">Login now!</p>
+	</div>
+
+{% endblock %}
